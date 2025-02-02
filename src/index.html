@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Image Compressor - Reduce Photo Size Without Upload | TinyIMG</title>
+    
+    <!-- Primary Meta Tags -->
+    <meta name="description" content="Compress images instantly in your browser. No upload needed, 100% private. Reduce JPEG/PNG file sizes while preserving quality. Free, secure, and works offline.">
+    <meta name="keywords" content="image compressor, photo compression, reduce image size, compress photos online, free image optimizer, private image compression, no upload image compress">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tinyimg.app/">
+    <meta property="og:title" content="Free Browser-Based Image Compression - No Upload Required">
+    <meta property="og:description" content="Compress images privately in your browser. No servers, no upload, just fast and secure image compression. Reduce file size while maintaining quality.">
+    <meta property="og:image" content="https://tinyimg.app/preview.jpg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://tinyimg.app/">
+    <meta property="twitter:title" content="Private Image Compression - Browser-Based & Free">
+    <meta property="twitter:description" content="Compress images securely in your browser. No upload needed, 100% private, and free to use. Perfect for web optimization.">
+    
+    <!-- Additional SEO Tags -->
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="TinyIMG">
+    <link rel="canonical" href="https://tinyimg.app/">
+    
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Top ad -->
+    <div class="ad-container" id="topAd">
+        Ad Space
+    </div>
+
+    <!-- Sidebar ad for larger screens -->
+    <div class="ad-container ad-sidebar" id="sideAd">
+        Sidebar Ad
+    </div>
+
+    <div class="container">
+        <h1>Private Image Compression</h1>
+        
+        <div class="trust-features">
+            <div class="trust-feature">
+                <i>🔒</i> 100% Browser-Based
+            </div>
+            <div class="trust-feature">
+                <i>💻</i> No Server Upload
+            </div>
+            <div class="trust-feature">
+                <i>📱</i> Keep EXIF Data
+            </div>
+        </div>
+
+        <div class="drop-zone" id="dropZone">
+            <p>Drag & Drop Image Here</p>
+            <p>or</p>
+            <input type="file" id="fileInput" accept="image/*">
+            <p class="real-time-feedback">Your image will be processed on your device</p>
+        </div>
+
+        <div class="preview-container" id="previewContainer">
+            <img id="imagePreview" alt="Image preview">
+        </div>
+
+        <div class="controls">
+            <div class="slider-container">
+                <label for="sizeSlider">Max File Size: <span id="sizeDisplay">500 KB</span></label>
+                <input type="range" id="sizeSlider" min="100" max="5000" value="500" step="100">
+            </div>
+            <button id="compressBtn" disabled>Compress Now</button>
+        </div>
+
+        <!-- Mid-content ad -->
+        <div class="ad-container" id="midAd">
+            Ad Space
+        </div>
+
+        <div class="stats">
+            <p>Original: <span id="originalSize">-</span></p>
+            <p>Estimated Output: <span id="estimatedSize">-</span></p>
+            <p>Compressed Result: <span id="compressedSize">-</span></p>
+            <p id="privacyNote" style="font-size: 14px; color: #666;">
+                ℹ️ Your image never leaves your device
+            </p>
+        </div>
+        <div id="downloadLink"></div>
+
+        <!-- Bottom ad before footer -->
+        <div class="ad-container" id="bottomAd">
+            Ad Space
+        </div>
+
+        <div class="footer">
+            <a href="#" id="privacyLink">Privacy</a> | 
+            <a href="#" id="faqLink">FAQ</a>
+        </div>
+    </div>
+
+    <!-- Privacy Modal -->
+    <div id="privacyModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" id="modalClose">&times;</span>
+            <h2>Privacy & Security</h2>
+            
+            <div class="privacy-section">
+                <h3>🔒 100% Browser-Based Processing</h3>
+                <p>All image compression happens directly in your browser using JavaScript's built-in Canvas API. 
+                Your images never leave your device.</p>
+                <div class="tech-details">
+                    Technology: HTML5 Canvas + Browser File API
+                </div>
+            </div>
+
+            <div class="privacy-section">
+                <h3>📡 No Server Communication</h3>
+                <p>This tool operates entirely offline. You can even disconnect from the internet after loading the page and it will still work!</p>
+                <div class="tech-details">
+                    No network requests are made during compression
+                </div>
+            </div>
+
+            <div class="privacy-section">
+                <h3>🔍 Technical Details</h3>
+                <ul>
+                    <li>No cookies or tracking</li>
+                    <li>No analytics or third-party scripts</li>
+                    <li>Original EXIF data is preserved</li>
+                    <li>Source code is open and inspectable</li>
+                </ul>
+            </div>
+
+            <div class="privacy-section">
+                <h3>💡 Verify It Yourself</h3>
+                <p>You can verify these claims by:</p>
+                <ul>
+                    <li>Using your browser's Network tab (F12) to see no uploads occur</li>
+                    <li>Disconnecting from the internet after page load</li>
+                    <li>Inspecting the source code on GitHub</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- FAQ Modal -->
+    <div id="faqModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" id="faqModalClose">&times;</span>
+            <h2>Frequently Asked Questions</h2>
+            
+            <div class="faq-section">
+                <h3>🎯 What's the optimal file size for web images?</h3>
+                <p>For typical web images:</p>
+                <ul>
+                    <li>Hero images: 200-400 KB</li>
+                    <li>Thumbnail images: 30-100 KB</li>
+                    <li>Product images: 70-200 KB</li>
+                </ul>
+            </div>
+
+            <div class="faq-section">
+                <h3>🖼️ Will compression affect image quality?</h3>
+                <p>Our tool uses smart compression to find the optimal balance between size and quality. The preview helps you see the results before downloading.</p>
+            </div>
+
+            <div class="faq-section">
+                <h3>📱 What about mobile-friendly images?</h3>
+                <p>For mobile optimization:</p>
+                <ul>
+                    <li>Keep images under 200 KB</li>
+                    <li>Use appropriate dimensions (max 1200px width)</li>
+                    <li>Consider using WebP format for modern browsers</li>
+                </ul>
+            </div>
+
+            <div class="faq-section">
+                <h3>🔍 Will I lose EXIF data?</h3>
+                <p>Our compression preserves original EXIF data including camera settings and GPS information.</p>
+            </div>
+
+            <div class="faq-section">
+                <h3>💾 What file types are supported?</h3>
+                <p>Currently supported formats:</p>
+                <ul>
+                    <li>JPEG/JPG</li>
+                    <li>PNG</li>
+                    <li>Output is always JPEG for best compression</li>
+                </ul>
+            </div>
+
+            <div class="faq-section">
+                <h3>⚡ Tips for best results</h3>
+                <ul>
+                    <li>Start with high-quality images</li>
+                    <li>Use the preview to check quality</li>
+                    <li>Adjust the size slider based on your needs</li>
+                    <li>Consider your target platform's requirements</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
