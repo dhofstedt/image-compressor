@@ -118,6 +118,19 @@ function compressImage(file, quality) {
     });
 }
 
+// Add progress feedback function
+function updateProgress(progress) {
+    const progressBar = document.querySelector('.progress-bar');
+    const progressFill = document.querySelector('.progress-bar-fill');
+    
+    if (progress === 0 || progress === 100) {
+        progressBar.style.display = 'none';
+    } else {
+        progressBar.style.display = 'block';
+        progressFill.style.width = `${progress}%`;
+    }
+}
+
 // Updated click handler
 compressBtn.addEventListener('click', async () => {
     try {
@@ -136,9 +149,17 @@ compressBtn.addEventListener('click', async () => {
         const maxBytes = parseInt(sizeSlider.value) * 1024; // Convert KB to bytes
 
         // Compress with progress feedback
-        compressBtn.textContent = 'Compressing...';
+        updateProgress(0);
+        compressBtn.disabled = true;
+        document.querySelector('.btn-text').style.display = 'none';
+        document.querySelector('.btn-loading').style.display = 'inline-block';
+        
         const { blob, quality } = await compressToMaxSize(originalFile, maxBytes);
-        compressBtn.textContent = 'Compress Now';
+        
+        updateProgress(100);
+        compressBtn.disabled = false;
+        document.querySelector('.btn-text').style.display = 'inline-block';
+        document.querySelector('.btn-loading').style.display = 'none';
 
         // Show results
         const originalKB = (originalFile.size / 1024).toFixed(1);
@@ -197,9 +218,9 @@ compressBtn.addEventListener('click', async () => {
 document.addEventListener('dragover', (e) => e.preventDefault());
 document.addEventListener('drop', (e) => {
     e.preventDefault();
-    handleFile(e.dataTransfer.files[0]);
+    handleFiles(e.dataTransfer.files);
 });
-fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
 
 // Update file handler
 function handleFile(file) {
@@ -212,6 +233,12 @@ function handleFile(file) {
         updateEstimatedSize();
     }
 }
+
+// Add drag and drop visual feedback
+const dropZone = document.getElementById('dropZone');
+dropZone.addEventListener('dragenter', () => dropZone.classList.add('drag-over'));
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+dropZone.addEventListener('drop', () => dropZone.classList.remove('drag-over'));
 
 // Add modal handlers
 privacyLink.addEventListener('click', (e) => {
@@ -240,3 +267,121 @@ window.addEventListener('click', (e) => {
         faqModal.style.display = 'none';
     }
 });
+
+// ...existing variables and utility functions...
+
+// Simplified file handling
+function handleFiles(files) {
+    const file = files[0]; // Only handle first file
+    if (!file || !file.type.startsWith('image/')) {
+        alert('Please select an image file');
+        return;
+    }
+
+    // Reset UI
+    originalFile = file;
+    document.querySelector('.stats').style.display = 'block';
+    document.getElementById('downloadLink').style.display = 'none';
+    compressBtn.disabled = false;
+    compressBtn.textContent = 'Compress Image';
+    
+    // Update preview
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        imagePreview.src = e.target.result;
+        previewContainer.style.display = 'block';
+        
+        // Update stats
+        document.getElementById('originalSize').textContent = formatBytes(file.size);
+        updateEstimatedSize();
+        
+        // Enable compression
+        compressBtn.style.display = 'block';
+        compressBtn.disabled = false;
+        compressBtn.textContent = 'Compress Image';
+    };
+    reader.readAsDataURL(file);
+}
+
+// Remove old event listeners and simplify
+function initializeEventListeners() {
+    // Clear any existing listeners
+    fileInput.removeEventListener('change', handleFiles);
+    document.removeEventListener('drop', handleFiles);
+    
+    // Add fresh listeners
+    fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
+    document.addEventListener('dragover', (e) => e.preventDefault());
+    document.addEventListener('drop', (e) => {
+        e.preventDefault();
+        handleFiles(e.dataTransfer.files);
+    });
+
+    // Drag and drop visual feedback
+    dropZone.addEventListener('dragenter', () => dropZone.classList.add('drag-over'));
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+    dropZone.addEventListener('drop', () => dropZone.classList.remove('drag-over'));
+}
+
+// Initialize event listeners
+initializeEventListeners();
+
+// Remove these functions as they're no longer needed
+// showPreview()
+// handleFile()
+
+// Simplify compress button handler
+compressBtn.addEventListener('click', async () => {
+    if (!originalFile) return;
+    
+    try {
+        compressBtn.disabled = true;
+        compressBtn.textContent = 'Compressing...';
+        
+        const maxBytes = parseInt(sizeSlider.value) * 1024;
+        const { blob, quality } = await compressToMaxSize(originalFile, maxBytes);
+        
+        // Update stats
+        document.getElementById('originalSize').textContent = formatBytes(originalFile.size);
+        document.getElementById('compressedSize').textContent = 
+            `${formatBytes(blob.size)} (${Math.round(quality * 100)}% quality)`;
+        document.getElementById('estimatedSize').textContent = formatBytes(blob.size);
+        
+        // Create download link
+        const downloadLink = document.getElementById('downloadLink');
+        downloadLink.innerHTML = '';
+        downloadLink.style.display = 'block';
+        
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = createCompressedFilename(originalFile.name);
+        link.className = 'download-btn';
+        link.textContent = 'Download Compressed Image';
+        downloadLink.appendChild(link);
+        
+        compressBtn.textContent = 'Compress Image';
+        compressBtn.disabled = false;
+    } catch (error) {
+        console.error('Error:', error);
+        compressBtn.textContent = 'Error - Try Again';
+        compressBtn.disabled = false;
+    }
+});
+
+// Keep only these essential functions and remove duplicates
+function createCompressedFilename(originalName) {
+    const dotIndex = originalName.lastIndexOf('.');
+    return dotIndex === -1 ? 
+        `${originalName}-compressed.jpg` : 
+        `${originalName.substring(0, dotIndex)}-compressed.jpg`;
+}
+
+// Initialize event listeners
+fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
+document.addEventListener('dragover', (e) => e.preventDefault());
+document.addEventListener('drop', (e) => {
+    e.preventDefault();
+    handleFiles(e.dataTransfer.files);
+});
+
+// ...rest of existing code...
