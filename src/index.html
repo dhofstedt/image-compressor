@@ -3,279 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Free Image Compressor - Reduce Photo Size Without Upload | TinyIMG</title>
-    
-    <!-- Primary Meta Tags -->
-    <meta name="description" content="Compress images instantly in your browser. No upload needed, 100% private. Reduce JPEG/PNG file sizes while preserving quality. Free, secure, and works offline.">
-    <meta name="keywords" content="image compressor, photo compression, reduce image size, compress photos online, free image optimizer, private image compression, no upload image compress">
-    
+    <title>Image Compressor Pro | Reduce Image Size Online</title>
+    <meta name="description" content="Compress images instantly with our professional online tool. Reduce file size while maintaining quality. Supports JPG, PNG, and WEBP formats.">
+    <meta name="keywords" content="image compressor, compress images, reduce image size, online image optimizer">
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://tinyimg.app/">
-    <meta property="og:title" content="Free Browser-Based Image Compression - No Upload Required">
-    <meta property="og:description" content="Compress images privately in your browser. No servers, no upload, just fast and secure image compression. Reduce file size while maintaining quality.">
-    <meta property="og:image" content="https://tinyimg.app/preview.jpg">
-
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://tinyimg.app/">
-    <meta property="twitter:title" content="Private Image Compression - Browser-Based & Free">
-    <meta property="twitter:description" content="Compress images securely in your browser. No upload needed, 100% private, and free to use. Perfect for web optimization.">
-    
-    <!-- Additional SEO Tags -->
-    <meta name="robots" content="index, follow">
-    <meta name="author" content="TinyIMG">
-    <link rel="canonical" href="https://tinyimg.app/">
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
-
-    <!-- Google AdSense -->
+    <meta property="og:title" content="Image Compressor Pro | Reduce Image Size Online">
+    <meta property="og:description" content="Professional-grade image compression tool for web developers and content creators.">
+    <script src="https://cdn.jsdelivr.net/npm/compressorjs@1.2.0/dist/compressor.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!--Google Adsense-->
     <meta name="google-adsense-account" content="ca-pub-8128280883030054">
-    
 </head>
-<body>
-    <div class="layout-wrapper">
-        <div class="main-content">
-            <!-- Top ad -->
-            <div class="ad-container" id="ad-top">
-                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-                <!-- Header Ad -->
-                <ins class="adsbygoogle"
-                    style="display:block"
-                    data-ad-client="YOUR-AD-CLIENT-ID"
-                    data-ad-slot="YOUR-AD-SLOT"
-                    data-ad-format="auto"
-                    data-full-width-responsive="true"></ins>
-                <script>
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
+<body class="bg-gray-50 min-h-screen">
+    <main class="max-w-2xl mx-auto p-6">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-900 mb-2">Image Compressor Pro</h1>
+            <p class="text-gray-600">Optimize your images for web with lossless compression</p>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-6 transition-all duration-300">
+            <div id="dropzone" class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-blue-500 transition-colors">
+                <input type="file" id="fileInput" class="hidden" accept="image/*">
+                <div class="mb-4">
+                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
+                </div>
+                <p class="text-gray-600">Drag & drop image or <span class="text-blue-600 font-medium">browse files</span></p>
+                <p class="text-sm text-gray-500 mt-2">Supports: JPEG, PNG, WEBP</p>
             </div>
 
-            <div class="container">
-                <h1>Image Compressor</h1>
-                
-                <div class="trust-features">
-                    <div class="trust-feature">
-                        <i>🛡️</i>
-                        <h3>Enterprise-Grade Security</h3>
-                        <p>100% client-side processing with zero data collection</p>
+            <div id="previewSection" class="hidden">
+                <div class="my-6">
+                    <img id="imagePreview" class="max-h-64 mx-auto rounded-lg shadow-sm">
+                </div>
+
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Target Size: <span id="sizeValue" class="font-semibold">500 KB</span></label>
+                    <input id="sizeSlider" type="range" min="50" max="2048" value="500" 
+                           class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div class="text-center p-3 bg-gray-50 rounded-lg">
+                        <p class="text-sm text-gray-600">Original Size</p>
+                        <p id="originalSize" class="font-medium text-gray-900">-</p>
                     </div>
-                    <div class="trust-feature">
-                        <i>⚡</i>
-                        <h3>Lightning Fast</h3>
-                        <p>Compress images instantly with smart optimization</p>
-                    </div>
-                    <div class="trust-feature">
-                        <i>🎯</i>
-                        <h3>Perfect Quality</h3>
-                        <p>Maintain visual fidelity while reducing file size</p>
+                    <div class="text-center p-3 bg-gray-50 rounded-lg">
+                        <p class="text-sm text-gray-600">Compressed Size</p>
+                        <p id="compressedSize" class="font-medium text-gray-900">-</p>
                     </div>
                 </div>
 
-                <div class="drop-zone" id="dropZone">
-                    <div class="drop-zone-content">
-                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                            <polyline points="17 8 12 3 7 8"/>
-                            <line x1="12" y1="3" x2="12" y2="15"/>
-                        </svg>
-                        <h3>Drag & Drop Image Here</h3>
-                        <p>or</p>
-                        <input type="file" id="fileInput" accept="image/*">
-                        <p class="real-time-feedback">Files are processed locally for maximum privacy</p>
-                    </div>
+                <div class="flex gap-3">
+                    <button id="compressBtn" class="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors">
+                        Compress Image
+                    </button>
+                    <button id="downloadBtn" class="hidden flex-1 bg-green-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-700 transition-colors">
+                        Download
+                    </button>
+                    <button id="resetBtn" class="bg-gray-200 text-gray-700 px-4 py-3 rounded-lg font-medium hover:bg-gray-300 transition-colors">
+                        Reset
+                    </button>
                 </div>
-
-                <div class="preview-container" id="previewContainer">
-                    <img id="imagePreview" alt="Image preview">
-                </div>
-
-                <div class="controls">
-                    <div class="slider-container">
-                        <label for="sizeSlider">Target File Size</label>
-                        <div class="slider-value">Current: <span id="sizeDisplay">500 KB</span></div>
-                        <input type="range" id="sizeSlider" min="100" max="5000" value="500" step="100">
-                    </div>
-                    <button id="compressBtn" disabled>Compress Image</button>
-                </div>
-
-                <!-- Mid-content ad -->
-                <div class="ad-container" id="ad-middle">
-                    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-                    <!-- Middle Ad -->
-                    <ins class="adsbygoogle"
-                        style="display:block"
-                        data-ad-client="YOUR-AD-CLIENT-ID"
-                        data-ad-slot="YOUR-AD-SLOT"
-                        data-ad-format="auto"
-                        data-full-width-responsive="true"></ins>
-                    <script>
-                        (adsbygoogle = window.adsbygoogle || []).push({});
-                    </script>
-                </div>
-
-                <div class="stats">
-                    <div class="stat-card">
-                        <div class="stat-label">Original Size</div>
-                        <div class="stat-value" id="originalSize">-</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Estimated Output</div>
-                        <div class="stat-value" id="estimatedSize">-</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Compressed Size</div>
-                        <div class="stat-value" id="compressedSize">-</div>
-                    </div>
-                </div>
-
-                <div id="downloadLink" class="download-section"></div>
-
-                <div class="footer">
-                    <a href="#" id="privacyLink">Privacy</a> | 
-                    <a href="#" id="faqLink">FAQ</a>
-                </div>
-            </div>
-
-            <!-- Bottom ad -->
-            <div class="ad-container" id="ad-bottom">
-                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-                <!-- Bottom Ad -->
-                <ins class="adsbygoogle"
-                    style="display:block"
-                    data-ad-client="YOUR-AD-CLIENT-ID"
-                    data-ad-slot="YOUR-AD-SLOT"
-                    data-ad-format="auto"
-                    data-full-width-responsive="true"></ins>
-                <script>
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
             </div>
         </div>
 
-        <!-- Sidebar ad for larger screens -->
-        <aside class="ad-sidebar">
-            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-            <!-- Sidebar Ad -->
-            <ins class="adsbygoogle"
-                style="display:block"
-                data-ad-client="YOUR-AD-CLIENT-ID"
-                data-ad-slot="YOUR-AD-SLOT"
-                data-ad-format="auto"
-                data-full-width-responsive="true"></ins>
-            <script>
-                (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
-        </aside>
-    </div>
-
-    <!-- Privacy Modal -->
-    <div id="privacyModal" class="modal">
-        <div class="modal-content">
-            <span class="modal-close" id="modalClose">&times;</span>
-            <h2>Privacy & Security</h2>
-            
-            <div class="privacy-section">
-                <h3>🔒 100% Browser-Based Processing</h3>
-                <p>All image compression happens directly in your browser using JavaScript's built-in Canvas API. 
-                Your images never leave your device.</p>
-                <div class="tech-details">
-                    Technology: HTML5 Canvas + Browser File API
-                </div>
-            </div>
-
-            <div class="privacy-section">
-                <h3>📡 No Server Communication</h3>
-                <p>This tool operates entirely offline. You can even disconnect from the internet after loading the page and it will still work!</p>
-                <div class="tech-details">
-                    No network requests are made during compression
-                </div>
-            </div>
-
-            <div class="privacy-section">
-                <h3>🔍 Technical Details</h3>
-                <ul>
-                    <li>No cookies or tracking</li>
-                    <li>No analytics or third-party scripts</li>
-                    <li>Original EXIF data is preserved</li>
-                    <li>Source code is open and inspectable</li>
-                </ul>
-            </div>
-
-            <div class="privacy-section">
-                <h3>💡 Verify It Yourself</h3>
-                <p>You can verify these claims by:</p>
-                <ul>
-                    <li>Using your browser's Network tab (F12) to see no uploads occur</li>
-                    <li>Disconnecting from the internet after page load</li>
-                    <li>Inspecting the source code on GitHub</li>
-                </ul>
-            </div>
+        <div class="text-center text-gray-500 text-sm mt-8">
+            <p>All files are processed locally in your browser. No data is uploaded to servers.</p>
         </div>
-    </div>
-
-    <!-- FAQ Modal -->
-    <div id="faqModal" class="modal">
-        <div class="modal-content">
-            <span class="modal-close" id="faqModalClose">&times;</span>
-            <h2>Frequently Asked Questions</h2>
-            
-            <div class="faq-section">
-                <h3>🎯 What's the optimal file size for web images?</h3>
-                <p>For typical web images:</p>
-                <ul>
-                    <li>Hero images: 200-400 KB</li>
-                    <li>Thumbnail images: 30-100 KB</li>
-                    <li>Product images: 70-200 KB</li>
-                </ul>
-            </div>
-
-            <div class="faq-section">
-                <h3>🖼️ Will compression affect image quality?</h3>
-                <p>Our tool uses smart compression to find the optimal balance between size and quality. The preview helps you see the results before downloading.</p>
-            </div>
-
-            <div class="faq-section">
-                <h3>📱 What about mobile-friendly images?</h3>
-                <p>For mobile optimization:</p>
-                <ul>
-                    <li>Keep images under 200 KB</li>
-                    <li>Use appropriate dimensions (max 1200px width)</li>
-                    <li>Consider using WebP format for modern browsers</li>
-                </ul>
-            </div>
-
-            <div class="faq-section">
-                <h3>🔍 Will I lose EXIF data?</h3>
-                <p>Our compression preserves original EXIF data including camera settings and GPS information.</p>
-            </div>
-
-            <div class="faq-section">
-                <h3>💾 What file types are supported?</h3>
-                <p>Currently supported formats:</p>
-                <ul>
-                    <li>JPEG/JPG</li>
-                    <li>PNG</li>
-                    <li>Output is always JPEG for best compression</li>
-                </ul>
-            </div>
-
-            <div class="faq-section">
-                <h3>⚡ Tips for best results</h3>
-                <ul>
-                    <li>Start with high-quality images</li>
-                    <li>Use the preview to check quality</li>
-                    <li>Adjust the size slider based on your needs</li>
-                    <li>Consider your target platform's requirements</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
+    </main>
     <script src="app.js"></script>
 </body>
 </html>
